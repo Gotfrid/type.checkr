@@ -1,0 +1,24 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/rocker-org/devcontainer-features/r-rig:latest": {
+      "version": "4.5.0",
+      "vscodeRSupport": "lsp",
+      "installRadian": true,
+      "installDevTools": true,
+      "installREnv": false
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "REditorSupport.r"
+      ],
+      "settings": {
+        "r.rterm.linux": "/usr/local/bin/radian",
+        "git.confirmSync": false,
+        "workbench.settings.editor": "json"
+      }
+    }
+  }
+}

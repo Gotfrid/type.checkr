@@ -1,4 +1,4 @@
-# Type Definitions in R
+# type.checkr
 
 Type definitions in R for static code analysis.
 

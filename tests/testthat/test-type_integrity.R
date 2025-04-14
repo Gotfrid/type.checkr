@@ -21,3 +21,13 @@ test_that("02_type_integrity: fails if typeParam references non-existing param",
   })
   expect_false(check_result)
 })
+
+test_that("03_type_integrity: passed when param and type are in place", {
+  check_result <- analyze(
+    system.file(
+      "testcases", "03_typing_integrity.R",
+      package = "type.checkr"
+    )
+  )
+  expect_true(check_result)
+})

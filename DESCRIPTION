@@ -1,5 +1,5 @@
 Package: type.checkr
-Title: Type definitions in R for static code analysis.
+Title: Type definitions in R for static code analysis
 Version: 0.0.0.9000
 Authors@R: 
     person("Pavel", "Demin", , "pavel.demin@appsilon.com", role = c("aut", "cre"))

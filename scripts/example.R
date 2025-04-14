@@ -1,7 +1,7 @@
 #' @param a First value
 #' @param b Second value
-#' @typeParam a numeric(1)
-#' @typeParam b numeric(1)
+#' @type a numeric(1)
+#' @type b numeric(1)
 my_function <- function(a, b) {
   invisible()
 }

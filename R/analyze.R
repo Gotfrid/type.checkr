@@ -22,14 +22,14 @@ analyze <- function(filepath) {
       # Assert: every param has a type
       params_without_type <- setdiff(param_names, type_names)
       if (length(params_without_type) > 0) {
-        warning("TypeError")
+        warning("TypeError: Params without types")
         check_result <- FALSE
       }
 
       # Assert: every type has a param
       types_without_param <- setdiff(type_names, param_names)
       if (length(types_without_param) > 0) {
-        warning("TypeError")
+        warning("TypeError: Types for undefined params")
         check_result <- FALSE
       }
 
@@ -66,13 +66,13 @@ analyze <- function(filepath) {
     function_name <- as.character(expr[[1]])
 
     if (!function_name %in% names(type_definitions)) {
-      warning("TypeError")
+      warning("TypeError: Function type undefined")
       check_result <<- FALSE
     }
 
     arguments <- expr[-1]
     if (length(arguments) != length(names(arguments))) {
-      warning("TypeError")
+      warning("TypeError: Unnamed function arguments")
       check_result <<- FALSE
     }
 
@@ -83,7 +83,7 @@ analyze <- function(filepath) {
         silent = TRUE
       )
       if (inherits(res, "try-error")) {
-        warning("TypeError")
+        warning("TypeError: Argument type mismatch")
         check_result <<- FALSE
       }
     }

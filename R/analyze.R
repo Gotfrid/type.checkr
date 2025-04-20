@@ -8,7 +8,7 @@ analyze <- function(filepath) {
   parsed_file <- roxygen2::parse_file(filepath)
   check_result <- TRUE
 
-  type_definitions <- lapply(parsed_file, function(block) {
+  type_definitions <- unlist(recursive = FALSE, lapply(parsed_file, function(block) {
     # Handle function roclet
     if (inherits(block$object, "function")) {
       params <- Filter(function(x) x$tag == "param", block$tags)
@@ -16,7 +16,6 @@ analyze <- function(filepath) {
 
       param_names <- sapply(params, \(x) x$val$name)
       type_names <- sapply(types, \(x) x$val$name)
-
 
       # Assert: every param has a type
       params_without_type <- setdiff(param_names, type_names)
@@ -31,8 +30,17 @@ analyze <- function(filepath) {
         warning("TypeError")
         check_result <<- FALSE
       }
-    }
-  })
 
+      # Add types to the definition
+      function_name <- block$object$alias
+      params_with_types <- intersect(param_names, type_names)
+      type_params <- lapply(types, function(tag) {
+        if (tag$val$name %in% params_with_types) {
+          setNames(list(x = tag$val$type), tag$val$name)
+        }
+      })
+      setNames(list(x = unlist(type_params, recursive = FALSE)), function_name)
+    }
+  }))
   check_result
 }

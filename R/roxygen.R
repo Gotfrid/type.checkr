@@ -20,3 +20,9 @@ roxy_tag_parse.roxy_tag_typeParam <- function(x) { # nolint
 roxy_tag_parse.roxy_tag_typecheck <- function(x) { # nolint
   roxygen2::tag_words_line(x)
 }
+
+#' @importFrom roxygen2 tag_words_line
+#' @exportS3Method roxygen2::roxy_tag_parse
+roxy_tag_parse.roxy_tag_typeReturn <- function(x) { # nolint
+  roxygen2::tag_words_line(x)
+}

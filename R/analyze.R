@@ -8,7 +8,7 @@ analyze <- function(filepath) {
   parsed_file <- roxygen2::parse_file(filepath)
   check_result <- TRUE
 
-  type_definitions <- unlist(recursive = FALSE, lapply(parsed_file, function(block) {
+  type_definitions <- unlist(recursive = FALSE, lapply(parsed_file, function(block) { # nolint
     # Handle function roclet
     if (inherits(block$object, "function")) {
       params <- Filter(function(x) x$tag == "param", block$tags)

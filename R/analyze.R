@@ -8,7 +8,9 @@ analyze <- function(filepath) {
   parsed_file <- roxygen2::parse_file(filepath)
   check_result <- TRUE
 
-  type_definitions <- unlist(recursive = FALSE, lapply(parsed_file, function(block) { # nolint
+  type_definitions <- new.env()
+
+  for (block in parsed_file) {
     # Handle function roclet
     if (inherits(block$object, "function")) {
       params <- Filter(function(x) x$tag == "param", block$tags)
@@ -21,14 +23,14 @@ analyze <- function(filepath) {
       params_without_type <- setdiff(param_names, type_names)
       if (length(params_without_type) > 0) {
         warning("TypeError")
-        check_result <<- FALSE
+        check_result <- FALSE
       }
 
       # Assert: every type has a param
       types_without_param <- setdiff(type_names, param_names)
       if (length(types_without_param) > 0) {
         warning("TypeError")
-        check_result <<- FALSE
+        check_result <- FALSE
       }
 
       # Add types to the definition
@@ -39,9 +41,12 @@ analyze <- function(filepath) {
           setNames(list(x = tag$val$type), tag$val$name)
         }
       })
-      setNames(list(x = unlist(type_params, recursive = FALSE)), function_name)
+
+      type_definitions[[function_name]] <- list(
+        x = unlist(type_params, recursive = FALSE)
+      )
     }
-  }))
+  }
 
   lapply(parsed_file, function(block) {
     tags <- vapply(block$tag, \(x) x$tag, character(1))

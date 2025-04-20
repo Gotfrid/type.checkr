@@ -42,5 +42,47 @@ analyze <- function(filepath) {
       setNames(list(x = unlist(type_params, recursive = FALSE)), function_name)
     }
   }))
+
+  lapply(parsed_file, function(block) {
+    tags <- vapply(block$tag, \(x) x$tag, character(1))
+
+    # Only process @typecheck
+    if (!"typecheck" %in% tags) {
+      return(NULL)
+    }
+
+    # Only process function calls
+    # TODO: more robust check?
+    if (!is.null(block$object)) {
+      return(NULL)
+    }
+
+    expr <- as.list(block$call)
+    function_name <- as.character(expr[[1]])
+
+    if (!function_name %in% names(type_definitions)) {
+      warning("TypeError")
+      check_result <<- FALSE
+    }
+
+    arguments <- expr[-1]
+    if (length(arguments) != length(names(arguments))) {
+      warning("TypeError")
+      check_result <<- FALSE
+    }
+
+    for (arg in names(arguments)) {
+      expected_type <- type_definitions[[function_name]][[arg]]
+      res <- try(
+        vapply(arguments[[arg]], identity, eval(parse(text = expected_type))),
+        silent = TRUE
+      )
+      if (inherits(res, "try-error")) {
+        warning("TypeError")
+        check_result <<- FALSE
+      }
+    }
+  })
+
   check_result
 }
